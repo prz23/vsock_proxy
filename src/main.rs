@@ -139,6 +139,7 @@ fn main() -> VsockProxyResult<()> {
     }else {
         let proxy = Proxy2::new(
             local_port,
+            local_port,
             remote_addr,
             remote_port,
             num_workers,
