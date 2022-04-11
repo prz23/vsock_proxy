@@ -118,10 +118,16 @@ impl Proxy {
         info!("Checking allowlist configuration");
         // let remote_addr = check_allowlist(remote_host, remote_port, config_file, only_4, only_6)
         //     .map_err(|err| format!("Error at checking the allowlist: {}", err))?;
+
+        // Obtain the remote server's IP address.
+        let mut addrs = Self::parse_addr(remote_host, only_4, only_6)
+            .map_err(|err| format!("Could not parse remote address: {}", err))?;
+        let remote_addr = *addrs.get(0).ok_or("No IP address found")?;
+
         let pool = ThreadPool::new(num_workers);
         let sock_type = SockType::Stream;
 
-        let remote_addr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
+        //let remote_addr = IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1));
         info!(
             "Using IP \"{:?}\" for the given server \"{}\"",
             remote_addr, remote_host
