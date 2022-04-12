@@ -227,7 +227,9 @@ impl Proxy {
                     disconnected = transfer(&mut server, &mut client);
                 }
             }
-            info!("Client on {:?} disconnected", client_addr);
+            shutdown(client_socket,Shutdown::Both);
+            shutdown(server_socket,Shutdown::Both);
+            info!("Client on {:?} disconnected,shotdown", client_addr);
         });
 
         Ok(())
