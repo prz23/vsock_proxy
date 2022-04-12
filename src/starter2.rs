@@ -9,7 +9,7 @@ use dns_lookup::lookup_host;
 use idna::domain_to_ascii;
 use log::info;
 use nix::sys::select::{select, FdSet};
-use nix::sys::socket::{SockType, SockAddr as NixSockAddr};
+use nix::sys::socket::{shutdown, Shutdown, SockType, SockAddr as NixSockAddr};
 use std::fs::File;
 use std::io::{Read, Write};
 use std::net::{IpAddr, SocketAddr, TcpStream, TcpListener};
@@ -213,7 +213,9 @@ impl Proxy2 {
                     disconnected = transfer(&mut server, &mut client);
                 }
             }
-            println!("Client on {:?} disconnected", client_addr);
+            shutdown(client_socket,Shutdown::Both);
+            shutdown(server_socket,Shutdown::Both);
+            println!("Client on {:?} disconnected,shoutdown", client_addr);
         });
 
         Ok(())
